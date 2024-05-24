@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -16,15 +17,31 @@ func NewRestaurantController(service *services.RestaurantService) *RestaurantCon
 	return &RestaurantController{Service: service}
 }
 
+var dayMap = map[string]string{
+	"Saturday":  "Sat",
+	"Sunday":    "Sun",
+	"Monday":    "Mon",
+	"Tuesday":   "Tues",
+	"Wednesday": "Weds",
+	"Thursday":  "Thurs",
+	"Friday":    "Fri",
+}
+
 func (controller *RestaurantController) GetOpenRestaurants(c *gin.Context) {
 	dateTimeStr := c.Query("datetime")
-	dateTime, err := time.Parse("2006-01-02 15:04:05", dateTimeStr)
+	_, err := time.Parse("Monday 03:04 pm", dateTimeStr)
+
+	parts := strings.Split(dateTimeStr, " ")
+	day := dayMap[parts[0]]
+
+	timeStr := parts[1] + " " + parts[2]
+	//fmt.Println(day + " " + timeStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid datetime format"})
 		return
 	}
 
-	openRestaurants, err := controller.Service.GetOpenRestaurants(dateTime)
+	openRestaurants, err := controller.Service.GetOpenRestaurants(day, timeStr)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch open restaurants"})
 		return
