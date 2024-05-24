@@ -3,6 +3,7 @@ package services
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"strconv"
@@ -47,7 +48,8 @@ func (service *RestaurantService) LoadData(filename string) error {
 	return nil
 }
 
-func (service *RestaurantService) GetOpenRestaurants(dateTime time.Time) ([]models.Restaurant, error) {
+func (service *RestaurantService) GetOpenRestaurants(day string, dateTime string) ([]models.Restaurant, error) {
+
 	var openRestaurants []models.Restaurant
 
 	var allRestaurants []models.Restaurant
@@ -57,7 +59,7 @@ func (service *RestaurantService) GetOpenRestaurants(dateTime time.Time) ([]mode
 
 	for _, restaurant := range allRestaurants {
 
-		if isOpen := isOpenAtDateTime(restaurant.OpeningHours, dateTime); isOpen {
+		if isOpen := isOpenAtDateTime(restaurant.OpeningHours, day, dateTime); isOpen {
 			openRestaurants = append(openRestaurants, restaurant)
 		}
 	}
@@ -65,37 +67,46 @@ func (service *RestaurantService) GetOpenRestaurants(dateTime time.Time) ([]mode
 	return openRestaurants, nil
 }
 
-func isOpenAtDateTime(openingHours string, dateTime time.Time) bool {
+func isOpenAtDateTime(openingHours string, day string, dateTime string) bool {
 
 	schedules := strings.Split(openingHours, "/")
 
 	for _, schedule := range schedules {
-
 		parts := strings.Split(strings.TrimSpace(schedule), " ")
 		if len(parts) < 4 {
 			continue
 		}
+		if parts[2] == "pm" && parts[5] == "am" {
+			continue
+		}
 
-		day := parts[0]
+		if parts[0] != day {
+			continue
+		}
+
 		startTimeStr := parts[1] + " " + parts[2]
 		endTimeStr := parts[4] + " " + parts[5]
 
-		parsedStartTime, err := time.Parse("3:04 pm", startTimeStr)
+		parsedStartTime, err := time.Parse("03:04 pm", startTimeStr)
 		if err != nil {
 			continue
 		}
-		parsedEndTime, err := time.Parse("3:04 pm", endTimeStr)
+		parsedEndTime, err := time.Parse("03:04 pm", endTimeStr)
 		if err != nil {
 			continue
 		}
+		partsx := strings.Split(strings.TrimSpace(dateTime), " ")
+		//println(partsx[1])
+		if parts[2] == "am" && parts[5] == "am" && partsx[1] == "pm" {
+			continue
+		}
+		if parts[2] == "pm" && parts[5] == "pm" && partsx[1] == "am" {
+			continue
+		}
+		fmt.Println(day + " " + dateTime + " " + startTimeStr + " " + endTimeStr)
 
-		currentParsedTime := time.Date(0, 1, 1, dateTime.Hour(), dateTime.Minute(), dateTime.Second(), 0, time.Local)
-
-		if strings.HasPrefix(dateTime.Weekday().String(), day) {
-
-			if currentParsedTime.After(parsedStartTime) && currentParsedTime.Before(parsedEndTime) {
-				return true
-			}
+		if dateTime >= parsedStartTime.Format("03:04 pm") && dateTime <= parsedEndTime.Format("03:04 pm") {
+			return true
 		}
 	}
 
