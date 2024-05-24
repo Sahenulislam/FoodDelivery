@@ -23,13 +23,13 @@ func main() {
 	restaurantService := services.NewRestaurantService(db)
 	userService := services.NewUserService(db)
 
-	if err := restaurantService.LoadData("data/restaurant_with_menu.json"); err != nil {
-		panic(err)
-	}
+	// if err := restaurantService.LoadData("data/restaurant_with_menu.json"); err != nil {
+	// 	panic(err)
+	// }
 
-	if err := userService.LoadData("data/users_with_purchase_history.json"); err != nil {
-		panic(err)
-	}
+	// if err := userService.LoadData("data/users_with_purchase_history.json"); err != nil {
+	// 	panic(err)
+	// }
 
 	restaurantController := controllers.NewRestaurantController(restaurantService)
 	userController := controllers.NewUserController(userService)
