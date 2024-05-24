@@ -1,7 +1,14 @@
 API Documentation
 
     Restaurant Endpoints
-    1. Get Top Restaurants
+    1. Get Open Restaurants
+        - URL: http://localhost:8080/restaurants/open
+        - Method: GET
+        - Parameters:
+                - datetime: day and time in the format "Monday 10:30 am".
+        - Example: http://localhost:8080/restaurants/open?datetime=Monday 10:16 am
+    
+    2. Get Top Restaurants
         - URL: http://localhost:8080/restaurants/top
         - Method: GET
         - Parameters:
@@ -10,12 +17,7 @@ API Documentation
             - more_than (optional): Whether to return restaurants with more than the specified number of dishes.
         - Example: http://localhost:8080/restaurants/top?number_of_dishes=5&price_range=10-20&more_than=false 
 
-    2. Get Open Restaurants
-        - URL: http://localhost:8080/restaurants/open
-        - Method: GET
-        - Parameters:
-                - datetime: Date and time in the format "YYYY-MM-DD HH:MM:SS".
-        - Example: http://localhost:8080/restaurants/open?datetime=2024-05-24%2015:00:00
+
         
     3. Search Restaurants by Name
         - URL: http://localhost:8080/restaurants/search/restaurant
