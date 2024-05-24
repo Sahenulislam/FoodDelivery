@@ -8,7 +8,7 @@ API Documentation
             - number_of_dishes (optional): Number of dishes.
             - price_range (optional): Price range of dishes.
             - more_than (optional): Whether to return restaurants with more than the specified number of dishes.
-        Example: http://localhost:8080/restaurants/top?number_of_dishes=5&price_range=10-20&more_than=false 
+        - Example: http://localhost:8080/restaurants/top?number_of_dishes=5&price_range=10-20&more_than=false 
 
     2. Get Open Restaurants
         - URL: http://localhost:8080/restaurants/open
