@@ -3,7 +3,6 @@ package services
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"strconv"
@@ -103,7 +102,7 @@ func isOpenAtDateTime(openingHours string, day string, dateTime string) bool {
 		if parts[2] == "pm" && parts[5] == "pm" && partsx[1] == "am" {
 			continue
 		}
-		fmt.Println(day + " " + dateTime + " " + startTimeStr + " " + endTimeStr)
+		//fmt.Println(day + " " + dateTime + " " + startTimeStr + " " + endTimeStr)
 
 		if dateTime >= parsedStartTime.Format("03:04 pm") && dateTime <= parsedEndTime.Format("03:04 pm") {
 			return true
